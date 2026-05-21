@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title> Calculator</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:
+    linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.7)),
+    url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=2000');
+    background-size:cover;
+    background-position:center;
+    overflow:hidden;
+    position:relative;
+    padding:20px;
+}
+body::before{
+    content:'';
+    position:absolute;
+    width:450px;
+    height:450px;
+    background:#00ffff30;
+    border-radius:50%;
+    top:-100px;
+    left:-100px;
+    filter:blur(100px);
+    animation:glow1 10s infinite alternate;
+}
+
+body::after{
+    content:'';
+    position:absolute;
+    width:400px;
+    height:400px;
+    background:#ff00ff30;
+    border-radius:50%;
+    bottom:-100px;
+    right:-100px;
+    filter:blur(100px);
+    animation:glow2 10s infinite alternate;
+}
+
+@keyframes glow1{
+    100%{
+        transform:translate(200px,150px);
+    }
+}
+
+@keyframes glow2{
+    100%{
+        transform:translate(-200px,-150px);
+    }
+}
+
+.container{
+    width:420px;
+    background:rgba(255,255,255,0.08);
+    backdrop-filter:blur(18px);
+    border-radius:35px;
+    padding:25px;
+    border:1px solid rgba(255,255,255,0.15);
+    box-shadow:
+    0 8px 32px rgba(0,0,0,0.4),
+    0 0 30px rgba(0,255,255,0.15);
+    position:relative;
+    z-index:2;
+    animation:fadeIn 1s ease;
+}
+
+.title{
+    text-align:center;
+    color:white;
+    font-size:2rem;
+    font-weight:600;
+    margin-bottom:20px;
+}
+
+.display{
+    width:100%;
+    height:90px;
+    border:none;
+    outline:none;
+    border-radius:20px;
+    padding:20px;
+    font-size:2rem;
+    text-align:right;
+    margin-bottom:20px;
+    background:rgba(255,255,255,0.1);
+    color:white;
+    box-shadow:inset 0 0 12px rgba(255,255,255,0.1);
+}
+
+.buttons{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
+}
+
+button{
+    height:70px;
+    border:none;
+    border-radius:18px;
+    font-size:1.2rem;
+    font-weight:600;
+    cursor:pointer;
+    color:white;
+    background:rgba(255,255,255,0.08);
+    transition:0.3s;
+    backdrop-filter:blur(5px);
+    box-shadow:0 5px 15px rgba(0,0,0,0.2);
+}
+
+button:hover{
+    transform:translateY(-4px) scale(1.04);
+    box-shadow:
+    0 0 20px rgba(255,255,255,0.2),
+    0 0 30px rgba(0,255,255,0.2);
+}
+
+button:active{
+    transform:scale(0.95);
+}
+
+.operator{
+    background:linear-gradient(45deg,#00c6ff,#0072ff);
+}
+
+.equal{
+    background:linear-gradient(45deg,#ff00cc,#3333ff);
+    grid-column:span 2;
+}
+
+.clear{
+    background:linear-gradient(45deg,#ff512f,#dd2476);
+}
+
+.delete{
+    background:linear-gradient(45deg,#f7971e,#ffd200);
+    color:black;
+}
+
+
+.converter{
+    margin-top:30px;
+    padding:20px;
+    border-radius:20px;
+    background:rgba(255,255,255,0.08);
+}
+
+.converter h2{
+    color:white;
+    margin-bottom:15px;
+    text-align:center;
+}
+
+.converter select,
+.converter input{
+    width:100%;
+    padding:12px;
+    margin:10px 0;
+    border:none;
+    border-radius:12px;
+    outline:none;
+    background:rgba(255,255,255,0.15);
+    color:white;
+    font-size:1rem;
+}
+
+.converter input::placeholder{
+    color:#ddd;
+}
+
+.convert-btn{
+    width:100%;
+    margin-top:10px;
+    background:linear-gradient(45deg,#00dbde,#fc00ff);
+}
+
+.result{
+    margin-top:15px;
+    text-align:center;
+    color:white;
+    font-size:1.2rem;
+    font-weight:600;
+}
+
+@keyframes fadeIn{
+    from{
+        opacity:0;
+        transform:translateY(30px) scale(0.9);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0) scale(1);
+    }
+}
+
+@media(max-width:500px){
+
+    .container{
+        width:100%;
+        padding:20px;
+    }
+
+    button{
+        height:60px;
+        font-size:1rem;
+    }
+
+    .display{
+        font-size:1.6rem;
+        height:75px;
+    }
+
+    .title{
+        font-size:1.6rem;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="title">✨ Neon Smart Calculator</div>
+
+    <!-- DISPLAY -->
+
+    <input type="text" id="display" class="display" readonly>
+
+    <!-- CALCULATOR BUTTONS -->
+
+    <div class="buttons">
+
+        <button class="clear" onclick="clearDisplay()">AC</button>
+        <button class="delete" onclick="deleteLast()">DEL</button>
+        <button class="operator" onclick="appendValue('%')">%</button>
+        <button class="operator" onclick="appendValue('/')">÷</button>
+
+        <button onclick="appendValue('7')">7</button>
+        <button onclick="appendValue('8')">8</button>
+        <button onclick="appendValue('9')">9</button>
+        <button class="operator" onclick="appendValue('*')">×</button>
+
+        <button onclick="appendValue('4')">4</button>
+        <button onclick="appendValue('5')">5</button>
+        <button onclick="appendValue('6')">6</button>
+        <button class="operator" onclick="appendValue('-')">−</button>
+
+        <button onclick="appendValue('1')">1</button>
+        <button onclick="appendValue('2')">2</button>
+        <button onclick="appendValue('3')">3</button>
+        <button class="operator" onclick="appendValue('+')">+</button>
+
+        <button onclick="appendValue('0')">0</button>
+        <button onclick="appendValue('.')">.</button>
+
+        <button class="equal" onclick="calculate()">=</button>
+
+    </div>
+
+    <!-- UNIT CONVERTER -->
+
+    <div class="converter">
+
+        <h2>🔄 Unit Converter</h2>
+
+        <select id="conversionType">
+            <option value="km-miles">Kilometers → Miles</option>
+            <option value="miles-km">Miles → Kilometers</option>
+            <option value="kg-lbs">Kilograms → Pounds</option>
+            <option value="lbs-kg">Pounds → Kilograms</option>
+            <option value="c-f">Celsius → Fahrenheit</option>
+            <option value="f-c">Fahrenheit → Celsius</option>
+        </select>
+
+        <input type="number" id="inputValue" placeholder="Enter value">
+
+        <button class="convert-btn" onclick="convertUnit()">
+            Convert
+        </button>
+
+        <div class="result" id="result">
+            Result: --
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+
+const display = document.getElementById("display");
+
+function appendValue(value){
+
+    display.value += value;
+
+}
+
+function clearDisplay(){
+
+    display.value = "";
+
+}
+
+function deleteLast(){
+
+    display.value = display.value.slice(0,-1);
+
+}
+
+function calculate(){
+
+    try{
+
+        display.value = eval(display.value);
+
+    }
+    catch{
+
+        display.value = "Error";
+
+    }
+
+}
+
+
+document.addEventListener("keydown",(event)=>{
+
+    const key = event.key;
+
+    if(
+        (key >= '0' && key <= '9') ||
+        key === '+' ||
+        key === '-' ||
+        key === '*' ||
+        key === '/' ||
+        key === '.' ||
+        key === '%'
+    ){
+
+        appendValue(key);
+
+    }
+
+    else if(key === 'Enter'){
+
+        calculate();
+
+    }
+
+    else if(key === 'Backspace'){
+
+        deleteLast();
+
+    }
+
+    else if(key === 'Escape'){
+
+        clearDisplay();
+
+    }
+
+});
+
+
+function convertUnit(){
+
+    const type = document.getElementById("conversionType").value;
+
+    const value = parseFloat(document.getElementById("inputValue").value);
+
+    const result = document.getElementById("result");
+
+    let output = 0;
+
+    if(isNaN(value)){
+
+        result.innerHTML = "❌ Please enter a value";
+
+        return;
+
+    }
+
+    switch(type){
+
+        case "km-miles":
+            output = value * 0.621371;
+            result.innerHTML = `${value} KM = ${output.toFixed(2)} Miles`;
+            break;
+
+        case "miles-km":
+            output = value * 1.60934;
+            result.innerHTML = `${value} Miles = ${output.toFixed(2)} KM`;
+            break;
+
+        case "kg-lbs":
+            output = value * 2.20462;
+            result.innerHTML = `${value} KG = ${output.toFixed(2)} LBS`;
+            break;
+
+        case "lbs-kg":
+            output = value * 0.453592;
+            result.innerHTML = `${value} LBS = ${output.toFixed(2)} KG`;
+            break;
+
+        case "c-f":
+            output = (value * 9/5) + 32;
+            result.innerHTML = `${value}°C = ${output.toFixed(2)}°F`;
+            break;
+
+        case "f-c":
+            output = (value - 32) * 5/9;
+            result.innerHTML = `${value}°F = ${output.toFixed(2)}°C`;
+            break;
+
+    }
+
+}
+
+</script>
+
+</body>
+</html>

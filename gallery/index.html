@@ -1,0 +1,411 @@
+<!-- Save this as index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Modern Image Gallery</title>
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body{
+      background: linear-gradient(135deg,#0f172a,#1e293b,#0f172a);
+      min-height:100vh;
+      color:white;
+      overflow-x:hidden;
+    }
+
+    header{
+      text-align:center;
+      padding:40px 20px;
+    }
+
+    header h1{
+      font-size:3rem;
+      margin-bottom:10px;
+      background: linear-gradient(to right,#38bdf8,#818cf8,#f472b6);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+    }
+
+    header p{
+      color:#cbd5e1;
+      font-size:1rem;
+    }
+
+    /* FILTER BUTTONS */
+
+    .filter-buttons{
+      display:flex;
+      justify-content:center;
+      flex-wrap:wrap;
+      gap:15px;
+      margin:20px;
+    }
+
+    .filter-btn{
+      padding:12px 22px;
+      border:none;
+      border-radius:30px;
+      background:#1e293b;
+      color:white;
+      cursor:pointer;
+      transition:0.4s;
+      font-weight:600;
+      box-shadow:0 0 10px rgba(255,255,255,0.1);
+    }
+
+    .filter-btn:hover,
+    .filter-btn.active{
+      background:linear-gradient(45deg,#38bdf8,#818cf8);
+      transform:translateY(-3px);
+      box-shadow:0 0 20px rgba(56,189,248,0.6);
+    }
+
+    /* GALLERY */
+
+    .gallery{
+      width:90%;
+      margin:auto;
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+      gap:25px;
+      padding-bottom:50px;
+    }
+
+    .gallery-item{
+      position:relative;
+      overflow:hidden;
+      border-radius:20px;
+      cursor:pointer;
+      transition:0.5s;
+      animation:fadeIn 0.8s ease;
+    }
+
+    .gallery-item img{
+      width:100%;
+      height:300px;
+      object-fit:cover;
+      transition:0.5s;
+      border-radius:20px;
+    }
+
+    .gallery-item:hover img{
+      transform:scale(1.1);
+      filter:brightness(70%);
+    }
+
+    .overlay{
+      position:absolute;
+      bottom:-100%;
+      left:0;
+      width:100%;
+      padding:20px;
+      background:linear-gradient(transparent,rgba(0,0,0,0.8));
+      transition:0.5s;
+    }
+
+    .gallery-item:hover .overlay{
+      bottom:0;
+    }
+
+    .overlay h3{
+      font-size:1.3rem;
+      margin-bottom:5px;
+    }
+
+    .overlay p{
+      color:#ddd;
+      font-size:0.9rem;
+    }
+
+    /* LIGHTBOX */
+
+    .lightbox{
+      position:fixed;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      background:rgba(0,0,0,0.95);
+      display:none;
+      justify-content:center;
+      align-items:center;
+      z-index:1000;
+      flex-direction:column;
+      animation:fadeIn 0.4s ease;
+    }
+
+    .lightbox img{
+      max-width:85%;
+      max-height:75%;
+      border-radius:20px;
+      box-shadow:0 0 30px rgba(255,255,255,0.2);
+    }
+
+    .close{
+      position:absolute;
+      top:25px;
+      right:35px;
+      font-size:40px;
+      color:white;
+      cursor:pointer;
+      transition:0.3s;
+    }
+
+    .close:hover{
+      transform:rotate(90deg);
+      color:#38bdf8;
+    }
+
+    .nav-buttons{
+      margin-top:25px;
+      display:flex;
+      gap:20px;
+    }
+
+    .nav-buttons button{
+      padding:12px 24px;
+      border:none;
+      border-radius:30px;
+      background:linear-gradient(45deg,#38bdf8,#818cf8);
+      color:white;
+      cursor:pointer;
+      font-size:1rem;
+      transition:0.4s;
+      font-weight:bold;
+    }
+
+    .nav-buttons button:hover{
+      transform:scale(1.08);
+      box-shadow:0 0 20px rgba(56,189,248,0.7);
+    }
+
+    @keyframes fadeIn{
+      from{
+        opacity:0;
+        transform:translateY(20px);
+      }
+      to{
+        opacity:1;
+        transform:translateY(0);
+      }
+    }
+
+    /* MOBILE */
+
+    @media(max-width:768px){
+      header h1{
+        font-size:2.2rem;
+      }
+
+      .gallery-item img{
+        height:220px;
+      }
+
+      .lightbox img{
+        max-width:95%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Modern Image Gallery</h1>
+    <p>Responsive Gallery with Lightbox, Hover Effects & Filters</p>
+  </header>
+
+  <!-- FILTER BUTTONS -->
+
+  <div class="filter-buttons">
+    <button class="filter-btn active" data-filter="all">All</button>
+    <button class="filter-btn" data-filter="nature">Nature</button>
+    <button class="filter-btn" data-filter="city">City</button>
+    <button class="filter-btn" data-filter="animals">Animals</button>
+  </div>
+
+  <!-- GALLERY -->
+
+  <div class="gallery">
+
+    <div class="gallery-item nature">
+      <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1200" alt="">
+      <div class="overlay">
+        <h3>Nature View</h3>
+        <p>Beautiful mountains and lake</p>
+      </div>
+    </div>
+
+    <div class="gallery-item city">
+      <img src="https://images.unsplash.com/photo-1494526585095-c41746248156?q=80&w=1200" alt="">
+      <div class="overlay">
+        <h3>City Lights</h3>
+        <p>Modern city skyline</p>
+      </div>
+    </div>
+
+    <div class="gallery-item animals">
+      <img src="https://images.unsplash.com/photo-1517849845537-4d257902454a?q=80&w=1200" alt="">
+      <div class="overlay">
+        <h3>Wild Animal</h3>
+        <p>Cute animal photography</p>
+      </div>
+    </div>
+
+    <div class="gallery-item nature">
+      <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1200" alt="">
+      <div class="overlay">
+        <h3>Forest</h3>
+        <p>Green peaceful forest</p>
+      </div>
+    </div>
+
+    <div class="gallery-item city">
+      <img src="https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?q=80&w=1200" alt="">
+      <div class="overlay">
+        <h3>Urban Street</h3>
+        <p>Night city atmosphere</p>
+      </div>
+    </div>
+
+    <div class="gallery-item animals">
+      <img src="https://images.unsplash.com/photo-1546182990-dffeafbe841d?q=80&w=1200" alt="">
+      <div class="overlay">
+        <h3>Dog Portrait</h3>
+        <p>High quality animal image</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- LIGHTBOX -->
+
+  <div class="lightbox">
+    <span class="close">&times;</span>
+    <img id="lightbox-img" src="">
+    
+    <div class="nav-buttons">
+      <button id="prev">⮜ Prev</button>
+      <button id="next">Next ⮞</button>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT -->
+
+  <script>
+
+    const galleryItems = document.querySelectorAll(".gallery-item");
+    const lightbox = document.querySelector(".lightbox");
+    const lightboxImg = document.getElementById("lightbox-img");
+    const closeBtn = document.querySelector(".close");
+    const nextBtn = document.getElementById("next");
+    const prevBtn = document.getElementById("prev");
+
+    let currentIndex = 0;
+
+    // OPEN LIGHTBOX
+
+    galleryItems.forEach((item, index) => {
+      item.addEventListener("click", () => {
+        currentIndex = index;
+        showImage();
+        lightbox.style.display = "flex";
+      });
+    });
+
+    function showImage(){
+      const img = galleryItems[currentIndex].querySelector("img");
+      lightboxImg.src = img.src;
+    }
+
+    // NEXT BUTTON
+
+    nextBtn.addEventListener("click", () => {
+      currentIndex = (currentIndex + 1) % galleryItems.length;
+      showImage();
+    });
+
+    // PREV BUTTON
+
+    prevBtn.addEventListener("click", () => {
+      currentIndex = (currentIndex - 1 + galleryItems.length) % galleryItems.length;
+      showImage();
+    });
+
+    // CLOSE LIGHTBOX
+
+    closeBtn.addEventListener("click", () => {
+      lightbox.style.display = "none";
+    });
+
+    // CLOSE WHEN CLICK OUTSIDE
+
+    lightbox.addEventListener("click", (e) => {
+      if(e.target === lightbox){
+        lightbox.style.display = "none";
+      }
+    });
+
+    // KEYBOARD SUPPORT
+
+    document.addEventListener("keydown", (e) => {
+      if(lightbox.style.display === "flex"){
+
+        if(e.key === "ArrowRight"){
+          currentIndex = (currentIndex + 1) % galleryItems.length;
+          showImage();
+        }
+
+        if(e.key === "ArrowLeft"){
+          currentIndex = (currentIndex - 1 + galleryItems.length) % galleryItems.length;
+          showImage();
+        }
+
+        if(e.key === "Escape"){
+          lightbox.style.display = "none";
+        }
+      }
+    });
+
+    // FILTERS
+
+    const filterButtons = document.querySelectorAll(".filter-btn");
+
+    filterButtons.forEach(button => {
+      button.addEventListener("click", () => {
+
+        filterButtons.forEach(btn => btn.classList.remove("active"));
+        button.classList.add("active");
+
+        const filter = button.getAttribute("data-filter");
+
+        galleryItems.forEach(item => {
+
+          if(filter === "all"){
+            item.style.display = "block";
+          }
+          else{
+            if(item.classList.contains(filter)){
+              item.style.display = "block";
+            }
+            else{
+              item.style.display = "none";
+            }
+          }
+
+        });
+
+      });
+    });
+
+  </script>
+
+</body>
+</html>
